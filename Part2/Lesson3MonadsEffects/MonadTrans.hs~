@@ -1,0 +1,117 @@
+module MonadTrans where
+
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans.Writer
+import Control.Monad.Trans.Class (lift)
+import Data.Char (toUpper)
+
+secondElem :: Reader [String] String
+secondElem = do
+  el2 <- asks (map toUpper . head . tail)
+  return el2
+
+logFirst :: [String] -> Writer String String
+logFirst xs = do
+  let el1 = head xs
+  let el2 = (map toUpper . head . tail) xs
+  tell el1
+  return el2
+
+
+logFirstAndRetSecond :: ReaderT [String] (Writer String) String
+logFirstAndRetSecond = do
+  el1 <- asks head
+  el2 <- asks (map toUpper . head . tail)
+  lift $ tell el1
+  return el2
+
+
+strings = ["abc", "defg", "hij"]
+test = runWriter (runReaderT logFirstAndRetSecond strings)
+
+-- Reader :: r -> a
+logFirstAndRetSecond' :: WriterT String (Reader [String]) String
+logFirstAndRetSecond' = do
+  el1 <- lift $ asks head
+  el2 <- lift $ asks (map toUpper . head . tail)
+  tell el1
+  return el2
+
+test2 = runReader (runWriterT logFirstAndRetSecond') strings
+
+{-
+Эта функция принимает два предиката и список и записывает в один лог-}
+{-элементы списка, удовлетворяющие первому предикату, в другой лог —-}
+{-второму предикату, а возвращающает список элементов, ни одному из-}
+{-них не удовлетворяющих. 
+
+GHCi> (runWriter . runWriterT) $ separate (<3) (>7) [0..10]
+(([3,4,5,6,7],[0,1,2]),[8,9,10])
+-}
+separate :: (a -> Bool) -> (a -> Bool) -> [a] -> WriterT [a] (Writer [a]) [a]
+separate p q xs = do
+  let ps = filter p xs
+  let qs = filter q xs
+  let ys = filter (\z -> ((not . p $ z) && (not . q $ z))) xs
+  tell ps
+  lift $ tell qs
+  return ys
+
+testSeparate = (runWriter . runWriterT) $ separate (<3) (>7) [0..10]
+
+
+-- possibly monadic type * -> *
+type MyRW = ReaderT [String] (Writer String)
+
+runMyRW :: MyRW a -> [String] -> (a, String) -- results is value and
+           -- string log
+runMyRW rw e = runWriter (runReaderT rw e)
+
+myAsks :: ([String] -> a) -> MyRW a
+myAsks = asks
+
+myTell :: String -> MyRW ()
+myTell = lift . tell
+
+logFirstAndRetSecond'' :: MyRW String
+logFirstAndRetSecond'' = do
+  el1 <- myAsks head
+  el2 <- myAsks (map toUpper . head . tail)
+  myTell el1
+  return el2
+
+test3 = runMyRW logFirstAndRetSecond'' strings
+
+
+
+logFirstAndRetSecond3 :: MyRWT IO String
+logFirstAndRetSecond3 = do
+  el1 <- myAsks head
+  myLift $ putStrLn $ "First is " ++ show el1
+  el2 <- myAsks (map toUpper . head . tail)
+  myLift $ putStrLn $ "Second is " ++ show el2
+  myTell el1
+  return el2
+
+{-
+GHCi> runMyRWT logFirstAndRetSecond ["abc","defg","hij"]
+First is "abc"
+Second is "DEFG"
+("DEFG","abc")
+-}
+
+
+type MyRWT m = ??
+
+runMyRWT :: ??
+runMyRWT = undefined
+
+myAsks :: Monad m => ??
+myAsks = undefined
+
+myTell :: Monad m => ??
+myTell = undefined
+
+myLift :: Monad m => ??
+myLift = undefined  
+

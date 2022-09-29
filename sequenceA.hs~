@@ -1,0 +1,5 @@
+seqA :: Integer -> Integer
+seqA n = if n == 0 then 1 else
+           let helper a0 a1 a2 n =
+                 if n == 2 then a2 else helper a1 a2 (a2+a1-2*a0) (n - 1)
+           in helper 1 2 3 n

@@ -1,0 +1,72 @@
+{-# LANGUAGE InstanceSigs #-}
+
+module WriterT where
+import Control.Applicative (liftA2)
+import Data.Tuple (swap)
+import Control.Monad
+
+newtype Writer w a = Writer { runWriter :: (a, w) }
+
+newtype WriterT w m a = WriterT { runWriterT :: m (a, w) }
+
+writer :: Monad m => (a, w) -> WriterT w m a
+writer = WriterT . return
+
+execWriterT :: Monad m => WriterT w m a -> m w
+execWriterT  = fmap snd . runWriterT
+
+instance Functor (Writer w) where
+    fmap f wr = Writer (f val, log)
+        where (val, log) = runWriter wr
+
+instance Functor m => Functor (WriterT w m) where
+  fmap :: (a -> b) -> WriterT w m a -> WriterT w m b
+  fmap f = WriterT . fmap updater . runWriterT
+    where updater ~(x, log) = (f x, log)
+
+{- my variant
+instance Functor m => Functor (WriterT w m) where
+    fmap f wrt = WriterT mp
+        where mp = swap <$> (f<$>) <$> swap <$> runWriterT wrt
+-}
+
+-------------------- Applicative
+
+instance Monoid w => Applicative (Writer w) where
+  pure v = Writer $ (v, mempty)
+  awf <*> awv = Writer $ (v', log') where
+    v' = (fst . runWriter $ awf) (fst . runWriter $ awv)
+    log' = (snd . runWriter $ awf) `mappend` (snd . runWriter $ awv)
+-- perhaps should have used pattern matching after runWriter
+
+instance (Monoid w, Applicative m) => Applicative (WriterT w m) where
+  pure v = WriterT $ pure (v, mempty)
+  awtf <*> awtv = WriterT $ liftA2 (,) v' log'
+    where
+      v' = (fst <$> runWriterT awtf) <*> (fst <$> runWriterT awtv)
+      log' = liftA2 mappend (snd <$> runWriterT awtf) (snd <$> runWriterT awtv)
+
+wTest1 = runWriter (Writer ((*6), "Hello ") <*> Writer (7, "world!"))
+
+wtTest1 :: [(Int, String)]
+wtTest1 = runWriterT (writer ((*6), "Hello ") <*> writer (7, "world!"))
+
+------------------------------------------------------------
+newtype StrictWriter w a = StrictWriter { runStrictWriter :: (a, w) }
+
+instance Functor (StrictWriter w) where
+  fmap f  = StrictWriter . updater . runStrictWriter
+    where updater (x, log) = (f x, log)
+
+instance Monoid w => Applicative (StrictWriter w) where
+  pure x  = StrictWriter (x, mempty)
+
+  f <*> v = StrictWriter $ updater (runStrictWriter f) (runStrictWriter v)
+    where updater (g, w) (x, w') = (g x, w `mappend` w')
+
+actionLazy = Writer (42,"Hello!")
+actionStrict = StrictWriter (42,"Hello!")
+
+------------------------------------------------------------
+instance Monad (Writer w) where
+  return v = undefined

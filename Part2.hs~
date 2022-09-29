@@ -1,0 +1,29 @@
+import Control.Applicative (ZipList(ZipList), getZipList)
+
+newtype Arr e1 a = Arr { getArr :: e1 -> a }
+newtype Arr2 e1 e2 a = Arr2 { getArr2 :: e1 -> e2 -> a }
+newtype Arr3 e1 e2 e3 a = Arr3 { getArr3 :: e1 -> e2 -> e3 -> a }
+
+{-
+instance Functor (Arr2 e1 e2) where
+  fmap f g =  (\x-> getArr2 f (g x))
+-}
+
+
+instance Functor (Arr e1) where
+  fmap f g = Arr (\x -> f $ (getArr g) x)
+
+instance Functor (Arr2 e1 e2) where
+  fmap f g = Arr2 (\x y -> f $ (getArr2 g) x y)
+
+instance Functor (Arr3 e1 e2 e3) where
+  fmap f g = Arr3 (\x y z -> f $ (getArr3 g) x y z)
+
+data Triple a = Tr a a a  deriving (Eq,Show)
+
+instance Functor Triple where
+  fmap f (Tr x y z) = Tr (f x) (f y) (f z)
+
+instance Applicative Triple where
+  pure x = Tr x x x
+  (Tr fx fy fz) <*> (Tr x y z) = Tr (fx x) (fy y) (fz z)

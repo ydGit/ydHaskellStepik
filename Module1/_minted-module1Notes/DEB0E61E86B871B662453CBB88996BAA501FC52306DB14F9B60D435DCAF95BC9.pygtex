@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{discount} \PYG{n}{limit} \PYG{n}{perc} \PYG{n}{sum} \PYG{o+ow}{=} \PYG{k+kr}{if} \PYG{n}{sum} \PYG{o}{\PYGZgt{}=} \PYG{n}{limit} \PYG{n}{them} \PYG{n}{sum} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{100} \PYG{o}{\PYGZhy{}} \PYG{n}{perc}\PYG{p}{)} \PYG{o}{/} \PYG{l+m+mi}{100} \PYG{k+kr}{else} \PYG{n}{sum}
+\end{Verbatim}

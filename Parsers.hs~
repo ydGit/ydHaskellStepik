@@ -1,0 +1,4 @@
+import Text.Parsec
+
+getList :: Parsec String u [String]
+getList = undefined

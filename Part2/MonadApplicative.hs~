@@ -1,0 +1,15 @@
+module MonadApplicative where
+
+data OddC a = Un a | Bi a a (OddC a) deriving (Eq,Show)
+
+concat3OC :: OddC a -> OddC a -> OddC a -> OddC a
+
+
+{-
+GHCi> tst1 = Bi 'a' 'b' (Un 'c')
+GHCi> tst2 = Bi 'd' 'e' (Bi 'f' 'g' (Un 'h'))
+GHCi> tst3 = Bi 'i' 'j' (Un 'k')
+GHCi> concat3OC tst1 tst2 tst3
+Bi 'a' 'b' (Bi 'c' 'd' (Bi 'e' 'f' (Bi 'g' 'h' (Bi 'i' 'j' (Un 'k')))))
+
+-}

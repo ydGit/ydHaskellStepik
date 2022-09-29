@@ -1,0 +1,4 @@
+module Endo where
+
+mkEndo :: Foldable t => t (a -> a) -> Endo a
+mkEndo = undefined

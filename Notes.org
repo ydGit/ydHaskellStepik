@@ -1,0 +1,11 @@
+* Part 1
+** Monads
+   Monads represent calculations with context.
+   Each monad has some "natural" interface (ask, asks, tell etc.)
+*** Reader Monad
+*** State Monad
+
+* Part 2
+** Lesson 3
+** Monad Error (Except)
+   Can use Maybe -- too simple. (Either a) -- is better. Natural interface -- throw, catch

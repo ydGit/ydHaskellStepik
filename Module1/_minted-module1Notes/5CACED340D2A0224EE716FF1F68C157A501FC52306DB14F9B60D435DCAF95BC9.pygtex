@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{value2\PYGZus{}res\PYGZsq{}} \PYG{o+ow}{=} \PYG{l+m+mi}{4}
+\PYG{n+nf}{rock\PYGZsq{}n\PYGZsq{}roll} \PYG{o+ow}{=} \PYG{l+m+mi}{42}
+\end{Verbatim}

@@ -1,0 +1,9 @@
+module Monads where
+
+safeHead = do
+  b <- null
+  if b
+    then return Nothing
+    else do
+    h <- head
+    return $ Just h

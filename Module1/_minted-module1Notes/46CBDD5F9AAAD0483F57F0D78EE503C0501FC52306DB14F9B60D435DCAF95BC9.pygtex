@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{max5\PYGZsq{}} \PYG{o+ow}{=} \PYG{n}{max} \PYG{l+m+mi}{5}
+
+\PYG{n+nf}{max5\PYGZsq{}} \PYG{l+m+mi}{4}
+\PYG{l+m+mi}{5}
+
+\PYG{n+nf}{max5\PYGZsq{}} \PYG{l+m+mi}{42}
+\PYG{l+m+mi}{42}
+\end{Verbatim}

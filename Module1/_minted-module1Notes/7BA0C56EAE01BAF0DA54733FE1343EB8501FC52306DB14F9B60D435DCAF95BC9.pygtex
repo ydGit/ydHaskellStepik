@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{3} \PYG{o}{+} \PYG{n}{sin} \PYG{l+m+mi}{42}
+\PYG{l+m+mf}{2.0834784520843663}
+
+\PYG{l+m+mi}{3} \PYG{o}{+} \PYG{p}{(}\PYG{n}{max} \PYG{l+m+mi}{5}\PYG{p}{)} \PYG{l+m+mi}{42}
+\PYG{l+m+mi}{45}
+\end{Verbatim}

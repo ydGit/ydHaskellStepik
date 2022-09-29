@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{standardDiscount} \PYG{o+ow}{=} \PYG{n}{discount} \PYG{l+m+mi}{100} \PYG{l+m+mi}{5}
+
+\PYG{n+nf}{standardDiscount} \PYG{l+m+mi}{200}
+\PYG{l+m+mi}{190}
+
+\PYG{n+nf}{standardDiscount} \PYG{l+m+mi}{90}
+\PYG{l+m+mi}{90}
+\end{Verbatim}

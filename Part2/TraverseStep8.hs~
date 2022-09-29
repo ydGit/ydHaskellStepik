@@ -1,0 +1,21 @@
+{--
+sequenceA :: Applicative f => t (f a) -> f (t a)
+traverse :: Applicative f => (a -> f b) -> t a -> f (t b)
+
+Note: traverse takes a function from a to some (f b) and maps it into
+a function in the foldable space; that is we have a function
+(t a) -> f (t b)
+instead of
+a -> f b
+
+as if we replaced a -> t a ; b -> t b
+
+
+Exercise: implement sequenceA using traverse.
+x :: t (f a)
+sequenceA = traverse id
+
+this is clear from the type of traverse and sequence
+if a = b then
+traverse' :: (a -> f a) -> t a -> f (t a)
+--}

@@ -1,0 +1,284 @@
+module MonadCont where
+
+import Control.Monad.Trans.Except
+import Control.Applicative (Alternative(empty, (<|>)))
+import Control.Monad (liftM, ap, MonadPlus(mzero, mplus), guard, msum, mfilter)
+
+
+square :: Int -> (Int -> r) -> r
+square x c = c $ x^2
+
+add :: Int -> Int -> (Int -> r) -> r
+add x y c = c $ x + y
+
+example = square 2 (add 3) (add 2) square id
+example1 = square 2 (add 3) (add 2) id
+
+-- decode :: Int -> (Int -> r) -> r
+decode c = c 0
+
+as n c = c n
+a n c = c n
+number = id
+
+one n c = c $ 1 + n
+two n c = c $ 2 + n
+three n c = c $ 3 + n
+seventeen n c = c $ 17 + n
+twenty n c = c $ 20 + n
+hundred n c = c $ 100 * n
+thousand n c = c $ 1000 * n
+
+-- example2 = decode one as a number
+{-
+GHCi> decode one hundred twenty three as a number
+123
+GHCi> decode one hundred twenty one as a number
+121
+GHCi> decode one hundred twenty as a number
+120
+GHCi> decode one hundred as a number
+100
+GHCi> decode three hundred as a number
+300
+GHCi> decode two thousand seventeen as a number
+2017
+-}
+
+newtype Cont r a = Cont { runCont :: (a -> r) -> r }
+
+instance Functor (Cont r) where
+  fmap = liftM
+
+instance Applicative (Cont r) where
+  pure = return
+  (<*>) = ap
+
+instance Monad (Cont r) where
+  return v = Cont $ \f -> f v
+  -- (>>=) :: Cont r a -> (a -> Cont r b) -> Cont r b
+  -- (>>=) :: Cont ((a -> r) -> r) -> (a -> Cont ((b -> r) -> r)) -> Cont ((b -> r) -> r)
+  -- v :: (a -> r) -> r
+  -- k :: a -> Cont ((b -> r) -> r)
+  -- runCont . k :: a -> (b -> r) -> r
+  -- flip (runCont . k) :: (b -> r) -> a -> r :: (b -> r) -> (a -> r)
+  (Cont v) >>= k = Cont $ v . (flip $ runCont . k)
+
+evalCont :: Cont r r -> r
+evalCont m = runCont m id
+
+showCont :: (Show a) => Cont String a -> String
+showCont m = runCont m show
+
+square' :: Int -> Cont r Int
+square' x = return $ x^2
+
+add' :: Int -> Int -> Cont r Int
+add' x y = return $ x + y
+
+sumSquares' :: Int -> Int -> Cont r Int
+sumSquares' x y = do
+  x2 <- square' x
+  y2 <- square' y
+  add' x y
+  
+------------------------------------------
+
+----------------------------------------
+
+-- newtype Cont r a = Cont { runCont :: (a -> r) -> r }
+type Checkpointed a = (a -> Cont a a) -> Cont a a
+
+--cp1 :: Checkpointed Int
+cp1 f = undefined
+
+applyCheckpointed c = \x -> c x
+-- if r = Cont a a then
+-- (a -> r) -> r = (a -> Cont a a) -> Cont a a
+-- So, we can do this
+-- Cont $ Checkpointed v and get a Continuation monad.
+-- the value can be extraced from the monad <-
+-- or this monad can be >>= into Kleisli arrow
+
+z :: Checkpointed a
+z = undefined
+z' = evalCont $ z return
+
+runCheckpointed :: (a -> Bool) -> Checkpointed a -> a
+runCheckpointed p c = let f v = if p v then return v else Cont $ \_ -> v
+                          x = evalCont $ c f
+                          c' = \f -> f x
+                      in
+                        if p x then (runCheckpointed p c') else x
+
+-- runCheckpointed p c = evalCont $ c f
+--   where
+--     -- f :: a -> Cont a a
+--     f v = if p v then return v else Cont $ \_ -> v
+
+-- runCheckpointed p c = let v = evalCont $ c return  -- where to get v? -- how to use c?
+--                           c' = \f -> f v
+--                       in
+--                         v
+                        -- if p v then v else (runCheckpointed p c')   
+-- I need to construct a proper function
+-- (Int -> Cont Int Int) based on the predicate p :: (a -> Bool)
+-- (a -> Cont Int Int)
+-- return does not do the job?
+
+-- addTens n is a continuation, I must somehow got inside and
+-- construct the return based on the value!
+-- need to rewatch the video
+
+    -- now I need to construc c' properly; perhaps from c
+    -- c :: (a -> Cont a a) -> Cont a a
+
+-- Q? Can I use filter? It smells like list semantics.
+-- there are several values in the context and the results depend on the predicate
+-- How do we get inside the continuation?
+
+
+{-
+p :: a -> Bool
+c :: a -> ( Cont (a -> a) -> a ) -> Cont (a -> a) -> a
+c :: a -> b -> b where b = Cont a a
+c has a monad Cont a inside, we can tye  to "get the value from the context"
+from the construction of addTens follows that `Checkpointed Int` is also a monad
+-}
+
+-- addTens :: Int -> (Int -> Cont Int Int) -> Cont Int Int
+-- addTens x :: (Int -> Cont Int Int) -> Cont Int Int
+addTens :: Int -> Checkpointed Int
+addTens x1 = \checkpoint -> do -- addTens x1 cont = do ... CPS
+  -- checkpoint :: Int -> Cont Int Int
+  checkpoint x1
+  let x2 = x1 + 10
+  checkpoint x2     {- x2 = x1 + 10 -}
+  let x3 = x2 + 10
+  checkpoint x3     {- x3 = x1 + 20 -}
+  let x4 = x3 + 10
+  return x4         {- x4 = x1 + 30 -}
+
+sumIt = do
+  let x1 = 3
+  x2 <- Cont $ \c -> if x1 > 2 then 5 else 6-- "STOP"--c 5
+  x2 <- return 6
+  return $ x1 + x2
+
+sumItWith x1 = do
+  let x2 = x1 + 10
+  x3 <- Cont $ \c -> c x2-- "STOP"--c 5
+  let x4 = x3 + 10
+  return x4
+  
+sumItWithIf x1 p = do
+  Cont $ \c -> if p x1 then c x1 else x1
+  let x2 = x1 + 10
+  Cont $ \c -> if p x2 then c x2 else x2
+  let x3 = x2 + 10
+  Cont $ \c -> if p x3 then c x3 else x3
+  let x4 = x3 + 10
+  return x4
+
+-- now compare
+sumItWith' x1 = do
+  let x2 = x1 + 10
+  x3 <- Cont $ \c -> if x2 > 2 then 5 else 6-- "STOP"--c 5
+  let x4 = x3 + 10
+  x5 <- Cont $ \c -> if x4 > 2 then 5 else 6-- "STOP"--c 5
+  return x5
+
+-- predCont :: (a -> Bool) -> Cont a a
+-- predCont p = Cont $ \c -> 
+
+sumItWith'' :: Int -> Checkpointed Int
+sumItWith'' x1 = \c -> do
+  c x1
+  let x2 = x1 + 10
+  -- x3 <- Cont $ \c -> if x2 > 2 then 5 else 6-- "STOP"--c 5
+  c x2
+  let x3 = x2 + 10
+  -- x5 <- Cont $ \c -> if x4 > 2 then 5 else 6-- "STOP"--c 5
+  c x3
+  let x4 = x3 + 10
+  return x4
+
+contConstr :: (Int -> Bool) -> Int -> Cont Int Int
+contConstr p x = if p x then Cont $ \_ -> x else return x
+runSumItWith'' n p = sumItWith'' n (contConstr p)
+
+testSumIt n = evalCont $ runSumItWith'' n (< 30)
+
+run1, run2, run3, run4 :: Int
+run1 = runCheckpointed (< 100) $ addTens 1
+run2 = runCheckpointed  (< 30) $ addTens 1
+run3 = runCheckpointed  (< 20) $ addTens 1
+run4 = runCheckpointed  (< 10) $ addTens 1
+
+test1, test2, test3, test4 :: Bool
+test1 = 31 == run1
+test2 = 21 == run2
+test3 = 11 == run3
+test4 = 1 == run4
+
+{-  My Notes
+f1 = addTens 1 :: Checkpointed Int -- a monad
+addTens 1 = \checkpoint -> do
+  checkpoint 1 :: Checkpointed Int
+  let x2 = 1 + 10 = 11
+  checkpoint 11
+  let x3 = x2 + 10 = 21
+  checkpoint 21
+  let x4 = x3 + 10 = 31
+  return 31
+
+from the definition we see that
+f1 is a function 
+\checkpoint -> m v
+from a predicate to some monad. Since we are talking about Continuation, I will assume the monad
+is the continuation monad
+Cont r a
+
+checkpoint must be a function as well. In this example from an integer to some monad.
+checkpoint :: Int -> Checkpointed Int
+checkpoint :: Int -> m Int
+
+In general form a -> Checkpointed a
+
+`do` glues monads into a more complex monad.
+`checkpoint 1` must be such a monad with type
+
+checkpoint 1 :: Checkpointed Int
+
+runCheckpointed (Int -> Bool) -> (Checkpointed Int) -> Int
+-}
+
+--------------------------------------------------
+newtype FailCont r e a = FailCont { runFailCont :: (a -> Either e r) -> (a -> Either e r) -> Either e r}
+
+instance Functor (FailCont r e) where
+  fmap = liftM
+
+instance Applicative (FailCont r e) where
+  pure = return
+  (<*>) = ap
+
+instance Monad (FailCont r e) where
+  return v = FailCont $ \fok _ -> fok v 
+  -- (>>=) :: FailCont r e a -> (a -> FailCont r e b) -> FailCont r e b
+  -- (>>=) :: Cont ((a -> r) -> r) -> (a -> Cont ((b -> r) -> r)) -> Cont ((b -> r) -> r)
+  -- v :: (a -> r) -> r
+  -- k :: a -> Cont ((b -> r) -> r)
+  -- runCont . k :: a -> (b -> r) -> r
+  -- flip (runCont . k) :: (b -> r) -> a -> r :: (b -> r) -> (a -> r)
+  -- (FailCont v) >>= k = FailCont $ v . (flip $ runCont . k)
+  (FailCont v) >>= k = FailCont $ runFailCont . k $ v
+
+--evalCont :: Cont r r -> r
+--evalCont m = runCont m id
+
+toFailCont :: Except e a -> FailCont r e a
+toFailCont = undefined
+
+evalFailCont :: FailCont (Either e a) e a -> Either e a
+evalFailCont = undefined

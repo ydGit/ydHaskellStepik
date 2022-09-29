@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{max} \PYG{l+m+mi}{5} \PYG{l+m+mi}{42}
+\PYG{p}{((}\PYG{n}{max} \PYG{l+m+mi}{5}\PYG{p}{)} \PYG{l+m+mi}{42}\PYG{p}{)}
+\end{Verbatim}

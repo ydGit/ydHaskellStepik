@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{fun} \PYG{n}{param} \PYG{o+ow}{=} \PYG{n}{body}
+\end{Verbatim}

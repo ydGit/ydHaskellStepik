@@ -1,0 +1,3 @@
+module ResultTraversable where
+
+data Result a = Ok a | Error String deriving (Eq,Show)

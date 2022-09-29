@@ -1,0 +1,24 @@
+{--
+Recall:
+A) fmap (f.g) = (fmap f) . (fmap g) -- for "regular" functors
+B) fmap h (Cmps x) = Cmps $ fmap (fmap h) x -- implementation of fmap on Cmps
+
+To prove:
+fmap h2 (fmap h1 (Cmps x)) = fmap (h2 . h1) (Cmps x)
+
+Transform left:
+1. fmap h1 (Cmps x) = Cmps $ (fmap (fmap h1)) x -- def of fmap on Cmps
+2. fmap h2 (fmap h1 (Cmps x)) = fmap h2 Cmps y, where y = (fmap (fmap h1)) x
+3. fmap h2 Cmps y = Cmps $ (fmap (fmap h2)) y
+4 Thus left side equals
+Cmps $ (fmap (fmap h2)) (fmap (fmap h1)) x
+
+Transform right:
+1. fmap (h2 . h1) (Cmps s) = Cmps $ (fmap (fmap (h2 . h1))) x -- def of fmap on Cmps
+2. Recall that fmap (h2 . h1) is applied to inner functor g of (Cmps f g a) and thus
+3. fmap (h2 . h1) = (fmap h2) . (fmap h1)
+4. Outer fmap is applied to functor f of (Cmps f g a), therefore
+fmap ( (fmap h2) . (fmap h1) ) = (fmap (fmap h2)) . (fmap (fmap h1))
+
+Both sides equal.
+--}

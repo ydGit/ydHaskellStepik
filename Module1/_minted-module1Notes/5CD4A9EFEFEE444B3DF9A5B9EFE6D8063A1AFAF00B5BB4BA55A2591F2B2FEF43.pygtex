@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{p}{(}\PYG{n+nx}{condition}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n+nx}{do\PYGZus{}steps\PYGZus{}1}
+\PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+    \PYG{n+nx}{do\PYGZus{}steps\PYGZus{}2}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

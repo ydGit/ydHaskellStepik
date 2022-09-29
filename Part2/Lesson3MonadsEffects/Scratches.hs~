@@ -1,0 +1,6 @@
+module Scratches where
+
+data Function a b = Function {getFunction :: a -> b}
+
+instance Functor (Function a) where
+  fmap f (Function g) = Function $ f . g

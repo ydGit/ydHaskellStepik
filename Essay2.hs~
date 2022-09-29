@@ -1,0 +1,9 @@
+{-
+To prove:
+
+fmap h2 (fmap h1 (Cmps x)) = fmap (h2 . h1) (Cmps x)
+
+LHS = fmap h2 (fmap h1 (Cmps x))
+RHS = fmap (h2 . h1) (Cmps x)
+
+-}

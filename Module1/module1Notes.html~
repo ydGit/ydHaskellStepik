@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-06-14 Thu 22:11 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>STEPIK | Haskell | Module 1</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yd" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link href="solarized-dark.css" rel="stylesheet"></link>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">STEPIK | Haskell | Module 1</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgadf0f26">1. Part 1</a>
+<ul>
+<li><a href="#org9ef2c8a">1.1. Evaluation Strategy</a></li>
+<li><a href="#org54d9fbc">1.2. Function Application and Parentheses</a></li>
+<li><a href="#orga2375e6">1.3. Partial Function Application</a></li>
+<li><a href="#org6dfc8c5">1.4. Quiz 1</a></li>
+<li><a href="#org64bb056">1.5. Defining Functions</a></li>
+<li><a href="#org0f5c144">1.6. Exercise 1</a></li>
+<li><a href="#orgeb40608">1.7. Function Purity</a></li>
+<li><a href="#orgee8aacd">1.8. Conditional Expression</a></li>
+<li><a href="#orgebc5539">1.9. Exercise 2</a></li>
+<li><a href="#org82a30b3">1.10. Defining Function Using Partial Application</a></li>
+</ul>
+</li>
+<li><a href="#orgaf5968b">2. Quiz 2</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgadf0f26" class="outline-2">
+<h2 id="orgadf0f26"><span class="section-number-2">1</span> Part 1</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org9ef2c8a" class="outline-3">
+<h3 id="org9ef2c8a"><span class="section-number-3">1.1</span> Evaluation Strategy</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+In imperative languages a program is a sequence of instructions.
+These instructions are read and executed in the order in which they
+are written and the results of execution are stored in memory. Any
+instruction can acess the results of preceding steps either reading
+from memory "cell" or writing to it. These <i>named memory location</i>
+correspond to program variables.
+</p>
+
+<p>
+Functional languages, such as Haskell, use a different approach. In
+this approach a program is an <b>expression</b>, perhaps a complicated one,
+and program execution (or <i>evaluation</i>) is a process of reduction of
+this expression. The reduction proceeds until we reach some final,
+most basic expression which represents the results of the program.
+</p>
+
+<p>
+Here is an example of evaluation of an arithmetic expression using a
+series of reductions:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">(5 <span style="color: #cae682;">+</span> 4 <span style="color: #cae682;">*</span> 3) <span style="color: #cae682;">^</span> 2
+(5 <span style="color: #cae682;">+</span> 12) <span style="color: #cae682;">^</span> 2
+17 <span style="color: #cae682;">^</span> 2
+289
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54d9fbc" class="outline-3">
+<h3 id="org54d9fbc"><span class="section-number-3">1.2</span> Function Application and Parentheses</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Let's start with an example:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">foo</span> bar
+</pre>
+</div>
+<p>
+This is an application of a function <b>foo</b> to its argument <code>bar</code>. In
+other languages you may find the following syntax for function application:
+</p>
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #cae682;">foo</span>(bar)
+</pre>
+</div>
+<p>
+In Haskell we do not have to enclose function arguments into
+parentheses. Parentheses can be used to avoid ambiguous situations
+when applying functions:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">acos</span> (cos pi)
+3.141592653589793
+</pre>
+</div>
+<p>
+Here we first apply <b>cos</b> to the argument <code>pi</code> and after that apply
+<b>acos</b> to the result of the first application. Without the parentheses
+the expression
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">acos</span> cos pi
+</pre>
+</div>
+<p>
+would mean "apply acos to cos and the result of this application apply
+to pi".
+</p>
+
+<p>
+Functions of several variables are treated in the following way:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">f</span> x y
+</pre>
+</div>
+<p>
+is an example of a function <b>f</b> applied to its arguments <i>x</i> and
+<i>y</i>. Consider a function <b>max</b> from the standard Haskell library:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">max</span> 5 42
+42
+</pre>
+</div>
+<p>
+which is a function of two variables. Note that trying to call this
+function like this
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">max</span> (5, 42)
+</pre>
+</div>
+<p>
+will results in error, since we apply a function <b>max</b> to a single
+argument (a pair of numbers), not two arguments.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga2375e6" class="outline-3">
+<h3 id="orga2375e6"><span class="section-number-3">1.3</span> Partial Function Application</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Note the following interesting property of parentheses in Haskell:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">(max 5) 42
+42
+</pre>
+</div>
+<p>
+It means that two expressions
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">max</span> 5 42
+((max 5) 42)
+</pre>
+</div>
+<p>
+are equivalent which is related to the fact that in Haskell function
+application is <b><i>left associative</i></b>.
+</p>
+
+<p>
+The expression
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">(max 5)
+</pre>
+</div>
+<p>
+is an example of <b>partially applied</b> function. In this particular case
+a function of two arguments is applied to only one. The result is a
+function of a single argument which can be used just like any other
+function of a single argument. For example:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">3 <span style="color: #cae682;">+</span> sin 42
+2.0834784520843663
+
+3 <span style="color: #cae682;">+</span> (max 5) 42
+45
+</pre>
+</div>
+<p>
+Here <b>sin</b> and <b>(max 5)</b> are both functions of a single argument.
+</p>
+
+<p>
+Partial function application is a very powerful tool. It allows us to
+view any function of N arguments as a function if just one
+argument. When a single argument is provided to this function it
+returns another function which accepts (N-1) arguments. The same view
+can be applied to the resulting function of (N-1) arguments. Thus
+we may view all functions in Haskell as accepting only one argument.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6dfc8c5" class="outline-3">
+<h3 id="org6dfc8c5"><span class="section-number-3">1.4</span> Quiz 1</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+In Haskell standard library there is a function <b>logBase</b> which
+calculates logarithm in an arbitrary base. This is a function of two
+arguments &#x2013; the base and the number.
+Choose the expressions which correspond to logarithm of 8 in the base
+2?
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">[1] (logBase, 2, 8)
+[2] logBase (2, 8)
+[3] logBase (2 8)
+[4] logBase 2 8
+[5] (logBase 2) 8
+</pre>
+</div>
+<p>
+<b>Answer</b>: [4, 5].
+</p>
+</div>
+</div>
+
+<div id="outline-container-org64bb056" class="outline-3">
+<h3 id="org64bb056"><span class="section-number-3">1.5</span> Defining Functions</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">fun</span> param <span style="color: #cae682;">=</span> body
+</pre>
+</div>
+<p>
+In Haskell users can define their own functions by providing the
+following:
+</p>
+<ul class="org-ul">
+<li>Name of the function</li>
+<li>Function parameters/arguments</li>
+<li>Body of the function.</li>
+</ul>
+<p>
+The body of the function is separated from name and parameters by the
+equality sign <b>=</b>.
+</p>
+
+<p>
+Consider the following example:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">sumSquares</span> x y <span style="color: #cae682;">=</span> x <span style="color: #cae682;">^</span> 2 <span style="color: #cae682;">+</span> y <span style="color: #cae682;">^</span> 2
+</pre>
+</div>
+<p>
+Here we define a function of two arguments, that returns the sum of
+squares of all arguments.
+</p>
+
+<p>
+The body of the function can use the parameters mentioned before the
+<b>=</b> sign (such as <i>x</i> and <i>y</i> in the example of <b>sumSquares</b>), any
+built-in function (such as <b>+</b> and <b>^</b> used in the exampel above) or
+any other function, defined by a user earlier.
+</p>
+
+<p>
+Note that Haskell is case-sensitive and requires that the name of a
+function and the names of the variables start with a lower-case
+letter. The names of the types of data (such as <b>Integer</b> or <b>Bool</b>,
+for example) start with a capital letter.
+The name of a variable may contain any letter, number, underscore or a
+quotation mark (').
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">value2_res'</span> <span style="color: #cae682;">=</span> 4
+<span style="color: #cae682;">rock'n'roll</span> <span style="color: #cae682;">=</span> 42
+</pre>
+</div>
+<p>
+Here we defined two functions of zero arguments, which always return
+the same value.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0f5c144" class="outline-3">
+<h3 id="org0f5c144"><span class="section-number-3">1.6</span> Exercise 1</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Write a function <b>lenVec3</b> which will calculatet the lengths of a
+three-dimentional vector. Assume that the function accepts three
+arguments, specifying the location of the head of the vector and the
+tail of vector is at origin. To calculate the square root from a
+number use the function <b>sqrt</b> from the standard library.
+</p>
+
+<p>
+<b>Solution</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">lenVec3</span> x y z <span style="color: #cae682;">=</span>  sqrt (x <span style="color: #cae682;">^</span> 2 <span style="color: #cae682;">+</span> y <span style="color: #cae682;">^</span> 2 <span style="color: #cae682;">+</span> z <span style="color: #cae682;">^</span> 2)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeb40608" class="outline-3">
+<h3 id="orgeb40608"><span class="section-number-3">1.7</span> Function Purity</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+An important property of functions in functional programming
+languages is their <b>purity</b>. A function is called pure if its
+return value is completely determined by its arguments and not
+affected by any other information. All data that may change the
+return value of a function must be provided as an explicit
+argument.
+</p>
+
+<p>
+As a consequence of purity, a function with no arguments is a
+constant:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">fortyTwo</span> <span style="color: #cae682;">=</span> 39 <span style="color: #cae682;">+</span> 3
+
+fortyTwo
+42
+</pre>
+</div>
+<p>
+How is it then possible to have a function which returns
+random numbers? For this purpose Haskell has a special
+mechanism that returns values in a kind of <b>container</b> called
+<b>IO</b>, and it will be discussed later.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgee8aacd" class="outline-3">
+<h3 id="orgee8aacd"><span class="section-number-3">1.8</span> Conditional Expression</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+Many programming languages provide a way to branch program execution based
+on some condition:
+</p>
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #8ac6f2; font-weight: bold;">if</span> (condition) {
+    do_steps_1
+} <span style="color: #8ac6f2; font-weight: bold;">else</span> {
+    do_steps_2
+}
+</pre>
+</div>
+<p>
+Haskell also has similar construction called <b>conditional
+expression</b>. It has the form
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #8ac6f2; font-weight: bold;">if</span> condition <span style="color: #8ac6f2; font-weight: bold;">then</span> expression1 <span style="color: #8ac6f2; font-weight: bold;">else</span> expression2
+</pre>
+</div>
+<p>
+For example, we can defined a function using conditional expressions
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">f</span> x <span style="color: #cae682;">=</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> x <span style="color: #cae682;">&gt;</span> 0 <span style="color: #8ac6f2; font-weight: bold;">then</span> 1 <span style="color: #8ac6f2; font-weight: bold;">else</span> (<span style="color: #cae682;">-</span>1)
+
+<span style="color: #cae682;">f</span> 5
+1
+<span style="color: #cae682;">f</span> (<span style="color: #cae682;">-</span>5)
+<span style="color: #cae682;">-</span>1
+</pre>
+</div>
+<p>
+Notice that we wrote (-5) to denote negative number. The expession
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">f <span style="color: #cae682;">-</span>5
+</pre>
+</div>
+<p>
+will be interpreted as an attempt to sutract 5 from <b>f</b> and will
+result an error.
+</p>
+
+<p>
+It is important to note that in Haskell <b>both</b> parts of the <b>if</b>
+expression must be provided and both parts must have the same
+type. In the definition of the function <b>f</b> in both branches of the
+<b>if</b> expression we return a number.
+</p>
+
+<p>
+Since <b>if-then-else</b> is an <i>expression</i>, it can be used like any
+other expression to build more complex expressions:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">g</span> x <span style="color: #cae682;">=</span> (<span style="color: #8ac6f2; font-weight: bold;">if</span> x <span style="color: #cae682;">&gt;</span> 0 <span style="color: #8ac6f2; font-weight: bold;">then</span> 1 <span style="color: #8ac6f2; font-weight: bold;">else</span> (<span style="color: #cae682;">-</span>1)) <span style="color: #cae682;">+</span> 3
+
+<span style="color: #cae682;">g</span> 5
+4
+<span style="color: #cae682;">g</span> (<span style="color: #cae682;">-</span>7)
+2
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgebc5539" class="outline-3">
+<h3 id="orgebc5539"><span class="section-number-3">1.9</span> Exercise 2</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+Implement a function <b>sign</b> which returns 1 if its argument is a
+positive number, (-1) if it is a negative number and 0 if the
+argument is zero.
+<b>Solution(s)</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">sign</span> x <span style="color: #cae682;">=</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> (x <span style="color: #cae682;">&gt;</span> 0) <span style="color: #8ac6f2; font-weight: bold;">then</span> 1 <span style="color: #8ac6f2; font-weight: bold;">else</span> (<span style="color: #8ac6f2; font-weight: bold;">if</span> (x <span style="color: #cae682;">==</span> 0) <span style="color: #8ac6f2; font-weight: bold;">then</span> 0 <span style="color: #8ac6f2; font-weight: bold;">else</span> (<span style="color: #cae682;">-</span>1))
+
+<span style="color: #cae682;">sign</span> x <span style="color: #cae682;">=</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> x <span style="color: #cae682;">==</span> 0 <span style="color: #8ac6f2; font-weight: bold;">then</span> 0 <span style="color: #8ac6f2; font-weight: bold;">else</span> x <span style="color: #cae682;">/</span> abs x
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org82a30b3" class="outline-3">
+<h3 id="org82a30b3"><span class="section-number-3">1.10</span> Defining Function Using Partial Application</h3>
+<div class="outline-text-3" id="text-1-10">
+<p>
+Partial application can be used to define new functions. Consider
+first the following function definition:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">max5</span> x <span style="color: #cae682;">=</span> max 5 x
+
+<span style="color: #cae682;">max5</span> 4
+5
+
+<span style="color: #cae682;">max5</span> 42
+42
+</pre>
+</div>
+<p>
+The function <b>max5</b> is a function of one argument. This function returns 5
+if the argument is less than 5, otherwise it returns the argument.
+Using partial we can define a function similar to <b>max5</b>:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">max5'</span> <span style="color: #cae682;">=</span> max 5
+
+<span style="color: #cae682;">max5'</span> 4
+5
+
+<span style="color: #cae682;">max5'</span> 42
+42
+</pre>
+</div>
+<p>
+Here we defined <b>max5'</b> as partially applied <b>max</b>. This approach
+of defining a function without explicitely writing argument(s) &#x2013; as
+we did for <b>max5</b> &#x2013; is called <b>point-free</b> style (an argument is
+called a <b>point</b> in this context). This style is quite often used in Haskell.
+</p>
+
+<p>
+Let us consider a more involved example:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">discount</span> limit perc sum <span style="color: #cae682;">=</span> <span style="color: #8ac6f2; font-weight: bold;">if</span> sum <span style="color: #cae682;">&gt;=</span> limit them sum <span style="color: #cae682;">*</span> (100 <span style="color: #cae682;">-</span> perc) <span style="color: #cae682;">/</span> 100 <span style="color: #8ac6f2; font-weight: bold;">else</span> sum
+</pre>
+</div>
+<p>
+We defined a function with three arguments <b>discount</b> that
+calculates a discount on a purchase if a <i>sum</i> of money spent on a
+purchase is greater of equal to specified <i>limit</i>. The discount is
+determined from the second argument &#x2013; <i>perc</i> (percentage).
+</p>
+
+<p>
+The order of the arguments in this definition has been chosen on
+purpose. The first two arguments correspond to certain "technical
+details" of the discount scheme. Their values are not expected to
+vary as often as the value of the the last argument. This makes it
+easier to partially apply the function <b>discount</b> to define
+<i>special</i> discount functions:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span style="color: #cae682;">standardDiscount</span> <span style="color: #cae682;">=</span> discount 100 5
+
+<span style="color: #cae682;">standardDiscount</span> 200
+190
+
+<span style="color: #cae682;">standardDiscount</span> 90
+90
+</pre>
+</div>
+<p>
+This defined a function <b>standardDiscount</b> which calculates a 5%
+discount for any purchase over 100.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgaf5968b" class="outline-2">
+<h2 id="orgaf5968b"><span class="section-number-2">2</span> Quiz 2</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Imagine that we need to develop an interface for translation between
+different natural languages. We want to have a function <b>translate</b>
+that accepts three parameters: <i>text</i>,  <i>languageFrom</i>,  and
+<i>languageTo</i>. What is the proper order of these parameters if we
+want to define special functions <b>translateFromSpanishToRussian</b>,
+<b>translateFromEnglishToRussian</b>, and <b>translateToRussian</b>.
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell">[1] translate languageTo languageFrom text
+[2] translate languageTo text languageFrom
+[3] translate languageFrom languageTo text
+[4] translate text languageTo languageFrom
+[5] translate languageFrom text languageTo
+[6] translate text languageFrom languageTo
+</pre>
+</div>
+
+<p>
+<b>Answer: [1]</b>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yd</p>
+<p class="date">Created: 2018-06-14 Thu 22:11</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

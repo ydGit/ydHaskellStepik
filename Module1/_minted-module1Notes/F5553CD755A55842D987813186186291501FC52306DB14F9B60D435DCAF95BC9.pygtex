@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{fortyTwo} \PYG{o+ow}{=} \PYG{l+m+mi}{39} \PYG{o}{+} \PYG{l+m+mi}{3}
+
+\PYG{n+nf}{fortyTwo}
+\PYG{l+m+mi}{42}
+\end{Verbatim}

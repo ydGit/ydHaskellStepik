@@ -1,0 +1,5 @@
+type A   = ((,) Integer |.| (,) Char) Bool
+
+type B t = ((,,) Bool (t -> t) |.| Either String) Int
+
+type C   = (|.|) ((->) Bool) ((->) Integer) Integer

@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{languageTo} \PYG{n}{languageFrom} \PYG{n}{text}
+\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{languageTo} \PYG{n}{text} \PYG{n}{languageFrom}
+\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{languageFrom} \PYG{n}{languageTo} \PYG{n}{text}
+\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{text} \PYG{n}{languageTo} \PYG{n}{languageFrom}
+\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{languageFrom} \PYG{n}{text} \PYG{n}{languageTo}
+\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{p}{]} \PYG{n}{translate} \PYG{n}{text} \PYG{n}{languageFrom} \PYG{n}{languageTo}
+\end{Verbatim}

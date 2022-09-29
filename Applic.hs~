@@ -1,0 +1,24 @@
+import Data.Char
+import Control.Applicative
+
+-- Part 2: 1.4
+newtype Prs a = Prs { runPrs :: String -> Maybe (a, String) }
+instance Functor Prs where
+  fmap f p = Prs (\s -> let res = runPrs p s in case res of
+                                                  Just (x, y) -> Just (f x, y)
+                                                  otherwise -> Nothing)
+instance Applicative Prs where
+  pure x = Prs (\ s -> Just (x, s))
+  (<*>) pf pv = Prs (\ s -> let res = runPrs pf s in
+                        case res of
+                          Nothing -> Nothing
+                          Just (f, s') -> let res' = runPrs pv s' in case res' of
+                                                                       Nothing -> Nothing
+                                                                       Just (x, s'') -> Just (f x, s'')
+                    )
+instance Alternative Prs where
+  empty = Prs (\ s -> Nothing)
+  pl <|> pr = Prs (\s -> let res = runPrs pl s in
+                      case res of
+                        Nothing -> runPrs pr s
+                        otherwise -> res)

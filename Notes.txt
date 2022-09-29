@@ -1,0 +1,5 @@
+Infix value contructors
+:smth:
+
+for example
+data Expr = Val Int | Expr :+: Expr | Expr :*: Expr

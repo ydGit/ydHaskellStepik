@@ -1,0 +1,45 @@
+module TreeTraversable where
+
+data Tree a = Nil | Branch (Tree a) a (Tree a)  deriving (Eq, Show)
+
+instance Functor Tree where
+  fmap _ Nil = Nil
+  fmap f (Branch tl x tr) = Branch (fmap f tl) (f x) (fmap f tr)
+
+instance Applicative Tree where
+  pure x = Branch Nil x Nil
+  Nil <*> _ = Nil
+  _ <*> Nil = Nil
+  (Branch ftl f ftr) <*> (Branch vtl v vtr) = Branch (ftl <*> vtl) (f v) (ftr <*> vtr)
+
+instance Foldable Tree where
+  foldr f ini tr = foldr f ini lst
+                   where lst = binTree2List tr
+                         binTree2List Nil = []
+                         binTree2List (Branch tl x tr) = (binTree2List tl) ++ [x] ++ (binTree2List tr)
+
+instance Traversable Tree where
+  -- traverse :: (Applicative f, Traversable Tree) => (a -> f b) -> Tree a -> f (Tree b)
+  traverse _ Nil = pure Nil
+  traverse f (Branch tl x tr) = let atl = traverse f tl
+                                    ax = f x
+                                    atr = traverse f tr
+                                in
+                                  pure Branch <*> atl <*> ax <*> atr
+
+{-
+
+sequenceA :: (Applicative f, Traversable t) => t (f a) -> f (t a)
+
+instance Traversable Result where
+  traverse f (Ok x) = pure Ok <*> f x
+  traverse f (Error s) = pure Error <*> pure s
+
+instance Traversable Triple where
+  traverse f (Tr x y z) = (pure Tr) <*> (f x) <*> (f y) <*> (f z)
+-}
+
+
+tr1 = (Branch (Branch Nil 1 Nil) 3 Nil)
+tr2 = (Branch (Branch Nil 1 Nil) 2 Nil)
+tr3 = Branch (Branch Nil [1,2] Nil) [3] Nil

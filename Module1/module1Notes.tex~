@@ -1,0 +1,298 @@
+% Created 2018-05-29 Tue 22:35
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\usepackage{minted}
+\author{yd}
+\date{\today}
+\title{STEPIK | Haskell | Module 1}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 25.3.1 (Org mode 8.2.10)}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Part 1}
+\label{sec-1}
+\subsection{Evaluation Strategy}
+\label{sec-1-1}
+In imperative languages a program is a sequence of instructions.
+These instructions are read and executed in the order in which they
+are written and the results of execution are stored in memory. Any
+instruction can acess the results of preceding steps either reading
+from memory "cell" or writing to it. These \emph{named memory location}
+correspond to program variables.
+
+Functional languages, such as Haskell, use a different approach. In
+this approach a program is an \textbf{expression}, perhaps a complicated one,
+and program execution (or \emph{evaluation}) is a process of reduction of
+this expression. The reduction proceeds until we reach some final,
+most basic expression which represents the results of the program.
+
+Here is an example of evaluation of an arithmetic expression using a
+series of reductions:
+\begin{minted}[]{haskell}
+(5 + 4 * 3) ^ 2
+(5 + 12) ^ 2
+17 ^ 2
+289
+\end{minted}
+
+\subsection{Function Application and Parentheses}
+\label{sec-1-2}
+Let's start with an example:
+\begin{minted}[]{haskell}
+foo bar
+\end{minted}
+This is an application of a function \textbf{foo} to its argument \texttt{bar}. In
+other languages you may find the following syntax for function application:
+\begin{minted}[]{c}
+foo(bar)
+\end{minted}
+In Haskell we do not have to enclose function arguments into
+parentheses. Parentheses can be used to avoid ambiguous situations
+when applying functions:
+\begin{minted}[]{haskell}
+acos (cos pi)
+3.141592653589793
+\end{minted}
+Here we first apply \textbf{cos} to the argument \texttt{pi} and after that apply
+\textbf{acos} to the result of the first application. Without the parentheses
+the expression
+\begin{minted}[]{haskell}
+acos cos pi
+\end{minted}
+would mean "apply acos to cos and the result of this application apply
+to pi".
+
+Functions of several variables are treated in the following way:
+\begin{minted}[]{haskell}
+f x y
+\end{minted}
+is an example of a function \textbf{f} applied to its arguments \emph{x} and
+\emph{y}. Consider a function \textbf{max} from the standard Haskell library:
+\begin{minted}[]{haskell}
+max 5 42
+42
+\end{minted}
+which is a function of two variables. Note that trying to call this
+function like this
+\begin{minted}[]{haskell}
+max (5, 42)
+\end{minted}
+will results in error, since we apply a function \textbf{max} to a single
+argument (a pair of numbers), not two arguments.
+
+\subsection{Partial Function Application}
+\label{sec-1-3}
+Note the following interesting property of parentheses in Haskell:
+\begin{minted}[]{haskell}
+(max 5) 42
+42
+\end{minted}
+It means that two expressions
+\begin{minted}[]{haskell}
+max 5 42
+((max 5) 42)
+\end{minted}
+are equivalent which is related to the fact that in Haskell function
+application is \textbf{\emph{left associative}}.
+
+The expression
+\begin{minted}[]{haskell}
+(max 5)
+\end{minted}
+is an example of \textbf{partially applied} function. In this particular case
+a function of two arguments is applied to only one. The result is a
+function of a single argument which can be used just like any other
+function of a single argument. For example:
+\begin{minted}[]{haskell}
+3 + sin 42
+2.0834784520843663
+
+3 + (max 5) 42
+45
+\end{minted}
+Here \textbf{sin} and \textbf{(max 5)} are both functions of a single argument.
+
+Partial function application is a very powerful tool. It allows us to
+view any function of N arguments as a function if just one
+argument. When a single argument is provided to this function it
+returns another function which accepts (N-1) arguments. The same view
+can be applied to the resulting function of (N-1) arguments. Thus
+we may view all functions in Haskell as accepting only one argument.
+
+\subsection{Quiz 1}
+\label{sec-1-4}
+In Haskell standard library there is a function \textbf{logBase} which
+calculates logarithm in an arbitrary base. This is a function of two
+arguments -- the base and the number.
+Choose the expressions which correspond to logarithm of 8 in the base
+2?
+\begin{minted}[]{haskell}
+[1] (logBase, 2, 8)
+[2] logBase (2, 8)
+[3] logBase (2 8)
+[4] logBase 2 8
+[5] (logBase 2) 8
+\end{minted}
+\textbf{Answer}: [4, 5].
+
+\subsection{Defining Functions}
+\label{sec-1-5}
+\begin{minted}[]{haskell}
+fun param = body
+\end{minted}
+In Haskell users can define their own functions by providing the
+following:
+\begin{itemize}
+\item Name of the function
+\item Function parameters/arguments
+\item Body of the function.
+\end{itemize}
+The body of the function is separated from name and parameters by the
+equality sign \textbf{=}.
+
+Consider the following example:
+\begin{minted}[]{haskell}
+sumSquares x y = x ^ 2 + y ^ 2
+\end{minted}
+Here we define a function of two arguments, that returns the sum of
+squares of all arguments.
+
+The body of the function can use the parameters mentioned before the
+\textbf{=} sign (such as \emph{x} and \emph{y} in the example of \textbf{sumSquares}), any
+built-in function (such as \textbf{+} and \textbf{\^{}} used in the exampel above) or
+any other function, defined by a user earlier.
+
+Note that Haskell is case-sensitive and requires that the name of a
+function and the names of the variables start with a lower-case
+letter. The names of the types of data (such as \textbf{Integer} or \textbf{Bool},
+for example) start with a capital letter.
+The name of a variable may contain any letter, number, underscore or a
+quotation mark (').
+\begin{minted}[]{haskell}
+value2_res' = 4
+rock'n'roll = 42
+\end{minted}
+Here we defined two functions of zero arguments, which always return
+the same value.
+
+\subsection{Exercise 1}
+\label{sec-1-6}
+Write a function \textbf{lenVec3} which will calculatet the lengths of a
+three-dimentional vector. Assume that the function accepts three
+arguments, specifying the location of the head of the vector and the
+tail of vector is at origin. To calculate the square root from a
+number use the function \textbf{sqrt} from the standard library.
+
+\textbf{Solution}
+\begin{minted}[]{haskell}
+lenVec3 x y z =  sqrt (x ^ 2 + y ^ 2 + z ^ 2)
+\end{minted}
+
+\subsection{Function Purity}
+\label{sec-1-7}
+An important property of functions in functional programming
+languages is their \textbf{purity}. A function is called pure if its
+return value is completely determined by its arguments and not
+affected by any other information. All data that may change the
+return value of a function must be provided as an explicit
+argument.
+
+As a consequence of purity, a function with no arguments is a
+constant:
+\begin{minted}[]{haskell}
+fortyTwo = 39 + 3
+
+fortyTwo
+42
+\end{minted}
+How is it then possible to have a function which returns
+random numbers? For this purpose Haskell has a special
+mechanism that returns values in a kind of \textbf{container} called
+\textbf{IO}, and it will be discussed later.
+
+\subsection{Conditional Expression}
+\label{sec-1-8}
+Many programming languages provide a way to branch program execution based
+on some condition:
+\begin{minted}[]{javascript}
+if (condition) {
+    do_steps_1
+} else {
+    do_steps_2
+}
+\end{minted}
+Haskell also has similar construction called \textbf{conditional
+expression}. It has the form
+\begin{minted}[]{haskell}
+if condition then expression1 else expression2
+\end{minted}
+For example, we can defined a function using conditional expressions
+\begin{minted}[]{haskell}
+f x = if x > 0 then 1 else (-1)
+
+f 5
+1
+f (-5)
+-1
+\end{minted}
+Notice that we wrote (-5) to denote negative number. The expession
+\begin{minted}[]{haskell}
+f -5
+\end{minted}
+will be interpreted as an attempt to sutract 5 from \textbf{f} and will
+result an error.
+
+It is important to note that in Haskell \textbf{both} parts of the \textbf{if}
+expression must be provided and both parts must have the same
+type. In the definition of the function \textbf{f} in both branches of the
+\textbf{if} expression we return a number.
+
+Since \textbf{if-then-else} is an \emph{expression}, it can be used like any
+other expression to build more complex expressions:
+\begin{minted}[]{haskell}
+g x = (if x > 0 then 1 else (-1)) + 3
+
+g 5
+4
+g (-7)
+2
+\end{minted}
+
+\subsection{Exercise 2}
+\label{sec-1-9}
+Implement a function \textbf{sign} which returns 1 if its argument is a
+positive number, (-1) if it is a negative number and 0 if the
+argument is zero.
+\textbf{Solution(s)}
+\begin{minted}[]{haskell}
+sign x = if (x > 0) then 1 else (if (x == 0) then 0 else (-1))
+
+sign x = if x == 0 then 0 else x / abs x
+\end{minted}
+
+\section{Defining Function Using Partial Application}
+\label{sec-2}
+\section{Quiz 2}
+\label{sec-3}
+% Emacs 25.3.1 (Org mode 8.2.10)
+\end{document}

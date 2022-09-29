@@ -1,0 +1,96 @@
+module ParserEP where
+
+import Control.Applicative
+
+newtype PrsEP a = PrsEP { runPrsEP :: Int -> String -> (Int, Either String (a, String)) }
+
+parseEP :: PrsEP a -> String -> Either String (a, String)
+parseEP p  = snd . runPrsEP p 0
+
+instance Functor PrsEP where
+  fmap f g = PrsEP (\n s -> let (m, res) = runPrsEP g n s
+                            in
+                              case res of
+                                (Right (c, s')) -> (m, Right ((f c), s'))
+                                (Left s') -> (m, Left s'))
+
+instance Applicative PrsEP where
+  pure x = PrsEP (\n s -> (n, Right (x, s)))
+  p <*> q = PrsEP (\n s -> let (m, res) = runPrsEP p n s
+                           in
+                             case res of
+                               (Right (f, s')) -> runPrsEP (f <$> q) m s'
+                               (Left s') -> (m, Left s'))
+
+
+-- This definition is not mine, taken from forum. But it is close to mine.
+satisfyEP :: (Char -> Bool) -> PrsEP Char
+satisfyEP p = PrsEP f where
+    f n [] = (n + 1, Left ("pos " ++ show (n + 1) ++ ": unexpected end of input"))
+    f n (x:xs)
+        | p x = (n + 1, Right (x, xs))
+        | otherwise = (n + 1, Left ("pos " ++ show (n + 1) ++ ": unexpected " ++  [x]))
+
+
+charEP :: Char -> PrsEP Char
+charEP c = satisfyEP (== c)
+
+anyEP :: PrsEP Char
+anyEP = satisfyEP (const True)
+
+testP :: PrsEP (Char, Char)
+-- (,) <$> anyEP <* charEP 'B' <*> anyEP
+testP = (((,) <$> anyEP) <* charEP 'B') <*> anyEP
+
+{-
+main :: IO ()
+main = do
+  res <- runPrsEP (pure 42) 0 "ABCDEFG"
+  print res
+-}
+
+{-
+GHCi> runPrsEP (pure 42) 0 "ABCDEFG"
+(0,Right (42,"ABCDEFG"))
+GHCi> charEP c = satisfyEP (== c)
+GHCi> anyEP = satisfyEP (const True)
+GHCi> testP = (,) <$> anyEP <* charEP 'B' <*> anyEP
+GHCi> runPrsEP testP 0 "ABCDE"
+(3,Right (('A','C'),"DE"))
+GHCi> parseEP testP "BCDE"
+Left "pos 2: unexpected C"
+GHCi> parseEP testP ""
+Left "pos 1: unexpected end of input"
+GHCi> parseEP testP "B"
+Left "pos 2: unexpected end of input"
+-}
+
+-- Next Step : Make PrsEP instance of Alternative
+instance Alternative PrsEP where
+  empty = PrsEP (\n s -> (n, Left ("pos "++(show n)++": empty alternative")))
+  p <|> q = PrsEP (\n s -> let (mp, pres) = runPrsEP p n s
+                               -- (mq, qres) = runPrsEP q n s
+                           in
+                             case pres of
+                               (Right _) -> (mp, pres)
+                               _ -> let (mq, qres) = runPrsEP q n s
+                                    in
+                                      case qres of
+                                        (Right _) -> (mq, qres)
+                                        _ -> if mp >= mq then (mp, pres) else (mq, qres))
+                             -- if mp >= mq then (mp, pres) else (mq, qres))
+
+tripleP [a,b,c] = (\x y z -> [x,y,z]) <$> charEP a <*> charEP b <*>  charEP c
+
+{-
+GHCi> runPrsEP empty 0 "ABCDEFG"
+(0,Left "pos 0: empty alternative")
+GHCi> charEP c = satisfyEP (== c)
+GHCi> tripleP [a,b,c] = (\x y z -> [x,y,z]) <$> charEP a <*> charEP b <*>  charEP c
+GHCi> parseEP (tripleP "ABC" <|> tripleP "ADC") "ABE"
+Left "pos 3: unexpected E"
+GHCi> parseEP (tripleP "ABC" <|> tripleP "ADC") "ADE"
+Left "pos 3: unexpected E"
+GHCi> parseEP (tripleP "ABC" <|> tripleP "ADC") "AEF"
+Left "pos 2: unexpected E"
+-}
